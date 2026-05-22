@@ -4,7 +4,6 @@ import {createComparison, defaultRules, rules} from "../lib/compare.js";
 const compare = createComparison([
   'skipNonExistentSourceFields',
   'skipEmptyTargetValues',
-  'failOnEmptySource',
   'arrayAsRange',
   'stringIncludes',
   'exactEquality'
