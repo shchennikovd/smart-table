@@ -1,7 +1,13 @@
-import {createComparison, defaultRules} from "../lib/compare.js";
+import {createComparison, defaultRules, rules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules);
+const compare = createComparison(defaultRules, [
+  rules.includes('date'),
+  rules.includes('customer'),
+  rules.includes('seller'),
+  rules.greaterThanOrEqual('totalFrom', 'total'),
+  rules.lessThanOrEqual('totalTo', 'total')
+]);
 
 export function initFiltering(elements, indexes) {
     // @todo: #4.1 — заполнить выпадающие списки опциями
