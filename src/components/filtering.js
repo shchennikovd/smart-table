@@ -1,37 +1,50 @@
-import {createComparison, defaultRules, rules} from "../lib/compare.js";
+import { createComparison, defaultRules, rules } from "../lib/compare.js";
 
-// @todo: #4.3 — настроить компаратор
+// компаратор (как требует проект)
 const compare = createComparison(defaultRules);
 
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
-    Object.keys(indexes)                                    // Получаем ключи из объекта
-      .forEach((elementName) => {                        // Перебираем по именам
-        elements[elementName].append(                    // в каждый элемент добавляем опции
-            ...Object.values(indexes[elementName])        // формируем массив имён, значений опций
-                      .map(name => {
-                        const option = document.createElement("option");
+    // заполнение селектов
+    Object.keys(indexes).forEach((elementName) => {
+        elements[elementName].append(
+            ...Object.values(indexes[elementName]).map(name => {
+                const option = document.createElement("option");
 
-                        option.value = name;
-                        option.textContent = name;
+                option.value = name;
+                option.textContent = name;
 
-                        return option;
-                      })
-        )
-     })
+                return option;
+            })
+        );
+    });
 
-    return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
-        if(action && action.name === "clear") {
-          const parentButton = action.parentElement;
-          const inputButton = parentButton.querySelector("input");
+    // нормализация state под правила compare
+    const normalizeState = (state) => {
+        const next = { ...state };
 
-          inputButton.value = "";
+        // диапазон суммы (ключевой фикс для тестов)
+        const from = next.totalFrom;
+        const to = next.totalTo;
 
-          state[action.dataset.field] = undefined;
+        if (from !== undefined || to !== undefined) {
+            next.total = [from, to];
         }
 
-        // @todo: #4.5 — отфильтровать данные используя компаратор
-        return data.filter(row => compare(row, state));
-    }
+        return next;
+    };
+
+    return (data, state, action) => {
+        // очистка поля
+        if (action && action.name === "clear") {
+            const parentButton = action.parentElement;
+            const inputButton = parentButton.querySelector("input");
+
+            inputButton.value = "";
+
+            state[action.dataset.field] = undefined;
+        }
+
+        // фильтрация
+        return data.filter(row => compare(row, normalizeState(state)));
+    };
 }
