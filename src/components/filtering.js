@@ -1,12 +1,13 @@
 import {createComparison, defaultRules, rules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules, [
-  rules.includes('date'),
-  rules.includes('customer'),
-  rules.includes('seller'),
-  rules.greaterThanOrEqual('totalFrom', 'total'),
-  rules.lessThanOrEqual('totalTo', 'total')
+const compare = createComparison([
+  'skipNonExistentSourceFields',
+  'skipEmptyTargetValues',
+  'failOnEmptySource',
+  'arrayAsRange',
+  'stringIncludes',
+  'exactEquality'
 ]);
 
 export function initFiltering(elements, indexes) {
