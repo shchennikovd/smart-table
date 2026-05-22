@@ -1,13 +1,7 @@
 import {createComparison, defaultRules, rules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison([
-  'skipNonExistentSourceFields',
-  'skipEmptyTargetValues',
-  'arrayAsRange',
-  'stringIncludes',
-  'exactEquality'
-]);
+const compare = createComparison(defaultRules);
 
 export function initFiltering(elements, indexes) {
     // @todo: #4.1 — заполнить выпадающие списки опциями
@@ -34,7 +28,7 @@ export function initFiltering(elements, indexes) {
 
           inputButton.value = "";
 
-          state[action.dataset.field] = "";
+          state[action.dataset.field] = undefined;
         }
 
         // @todo: #4.5 — отфильтровать данные используя компаратор
